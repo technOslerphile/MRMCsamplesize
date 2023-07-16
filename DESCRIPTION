@@ -11,6 +11,8 @@ Description: Sample size estimations for MRMC studies based on the Obuchowski-Ro
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/technOslerphile/MRMCsamplesize
+BugReports: https://github.com/technOslerphile/MRMCsamplesize/issues
 Imports:
         stats,
         fpow
