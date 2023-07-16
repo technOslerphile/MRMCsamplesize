@@ -1,0 +1,27 @@
+{
+    "id": "3805725A",
+    "path": "C:/Users/Dr. Dennis Robert/Desktop/MRMCsamplesize/R/mrmc_sample_size.R",
+    "project_path": "R/mrmc_sample_size.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1689495875422.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "46,0",
+        "scrollLine": "38",
+        "ignored_words": "intra\n"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1689502167,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1689502167268,
+    "read_only": false,
+    "read_only_alternatives": []
+}
