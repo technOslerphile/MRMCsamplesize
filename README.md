@@ -1,7 +1,7 @@
 # MRMCsamplesize
 **An R Package to Estimate Sample Sizes for Multi-Reader Multi-Case (MRMC) Studies**
 
-[//]: # [**Click here to go to the online R Package Documentation**](https://technoslerphile.github.io/autoCovariateSelection/index.html)
+[//]: # ([**Click here to go to the online R Package Documentation**](https://technoslerphile.github.io/autoCovariateSelection/index.html))
 
 *MRMCsamplesize* is an R package with a function to estimate number of cases and readers required for a planned MRMC study. It does so based on the Obuchowski-Rockette (OR) model for statistical analysis of MRMC data. The package
 is meant only for sample size estimation and it cannot be used for statistical analysis of MRMC data.
