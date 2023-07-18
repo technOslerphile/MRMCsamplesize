@@ -6,17 +6,17 @@
 #' @author Dennis Robert \email{dennis.robert.nm@gmail.com}
 #'
 #' @param endpoint Character string to inform what is the endpoint of the MRMC study. Values can be either \code{auc} or \code{sensitivity} or \code{specificity}. Should be between 0 and 1.
-#' @param J The number of readers for the study. It is recommended to have minimum 4 readers in any MRMC study.
-#' @param delta Effect size denoting the anticipated difference in the endpoint between the two interventions/imaging-modalities/techniques. Typically choosen values are 0.04, 0.05 and 0.06. Should be between 0 and 1.
-#' @param rangeb Inter-reader variability (sometimes referred to as between-reader variability) range denoting the anticipated difference between the highest accuracy of any observer in the study and the lowest accuracy of any observer in the study. Should be a numeric value between 0 and 1.
-#' @param rangew Intra-reader variability range (sometimes referred to as within-reader variability) denoting the anticipated difference between the accuracies of an observer who interprets the same images using the same imaging technique at two different times. Should be a numeric value between 0 and 1.
+#' @param J The number of readers for the study. It is recommended to have minimum 5 readers in any MRMC study.
+#' @param delta Effect size denoting the anticipated difference in the endpoint between the two interventions/imaging-modalities/techniques. Typically chosen values are 0.04, 0.05 and 0.06. Should be between 0 and 1.
+#' @param rangeb Inter-reader variability (sometimes referred to as between-reader variability) range denoting the anticipated difference between the highest accuracy of any reader in the study and the lowest accuracy of any reader in the study. Should be a numeric value between 0 and 1.
+#' @param rangew Intra-reader variability range (sometimes referred to as within-reader variability) denoting the anticipated difference between the accuracies of a reader who interprets the same images using the same imaging technique at two different times. Should be a numeric value between 0 and 1.
 #' @param theta Expected average value of the endpoint for the J readers.
 #' @param R Ratio of non-diseased cases to diseased cases. Defaults to 1.
-#' @param r1 Correlation between accuracies estimated from the same sample of patients by the same observer using different imaging techniques. Rockette (1998) recommended a value of 0.47 to use when there is lack of pilot data.
-#' @param r2 Correlation between accuracies estimated from the same sample of patients by different observers using the same imaging technique. It is assumed that r2 = r3 for default calculations.
-#' @param r3 Correlation between accuracies estimated from the same sample of patients by different readers using different imaging techniques. It is assumed that r2 = r3 for default calculations.
-#' @param rb Correlation between accuracies obtained when a set of observers examines the same sample of patients using different diagnostic test. The default value is 0.8 as recommended by Rockette, Obuchowski and Hillis.
-#' @param K Number of times each reader interprets the same images from the same imaging technique. This is always equal to 1 in a fully-crossed paired-reader paired-case study design.
+#' @param r1 Correlation between accuracies estimated from the same sample of patients by the same reader using different modalities. Rockette (1998) recommended a value of 0.47 to use when there is lack of pilot data.
+#' @param r2 Correlation between accuracies estimated from the same sample of patients by different readers using the same modality. It is assumed that r2 = r3 for default calculations.
+#' @param r3 Correlation between accuracies estimated from the same sample of patients by different readers using different modality. It is assumed that r2 = r3 for default calculations.
+#' @param rb Correlation between accuracies obtained when a set of readers examines the same sample of patients using different modalities. The default value is 0.8 as recommended by Rockette, Obuchowski and Hillis.
+#' @param K Number of times each reader interprets the same images from the same modality. This is always equal to 1 in a fully-crossed paired-reader paired-case study design with two modalities.
 #' @param power Power to detect \code{delta} given all other assumptions. Default value is 0.8 corresponding to 80 percent power.
 #' @param alpha The type I error rate. Default value is 0.05 corresponding to 5 percent type I error (significance level).
 #' @param nu1 Numerator degrees of freedom of the F-distribution which will be used to estimate the non-centrality parameter (lambda).
@@ -74,7 +74,6 @@ sampleSize_MRMC <- function(endpoint = "auc",
                             corr = FALSE,
                             ICC = NULL,
                             s = NULL){
-  options(scipen = 999)
   if(tolower(reader_var_estimation_method) == 'normal'){
     f <- function(x) J*x*stats::pnorm(x)^(J-1)*stats::dnorm(x)
     c1 <- 1/(2*stats::integrate(f,-Inf,Inf)$value) #constant for estimating sb
@@ -121,7 +120,7 @@ sampleSize_MRMC <- function(endpoint = "auc",
   }
 
   nUnits_i = ceiling(var.theta/sigma.square.c)
-  n.total <- nUnits_i*(1+R)
+  n.total <- ceiling(nUnits_i*(1+R))
 
 
 

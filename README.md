@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # MRMCsamplesize
 **An R Package to Estimate Sample Sizes for Multi-Reader Multi-Case (MRMC) Studies**
 

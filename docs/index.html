@@ -7,8 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="Sample size estimations for MRMC studies based on the Obuchowski-Rockette (OR) methodology is implemented. The function can calculate sample sizes where the 
              endpoint of interest in the study is either ROC AUC (Area-Under-the-Receiver-Operating-Characteristics-Curve) or sensitivity. The package can also return sample sizes for studies
-             expected to have clustering effect (eg.- multiple pulmonary nodules per patient). All calculations assume that the study design is fully crossed (paired-reader, paired-case) where
-             each reader reads/interprets each case (eg.- Chest X-ray image) and there are two intereventions/imaging-modalities/techniques in the study.">
+             expected to have clustering effect (e.g.- multiple pulmonary nodules per patient). All calculations assume that the study design is fully crossed (paired-reader, paired-case) where
+             each reader reads/interprets each case and that there are two interventions/imaging-modalities/techniques in the study. In addition to MRMC, it can also be used to estimate sample sizes 
+             for standalone studies where sensitivity or AUC are the primary endpoints.
+             The methods implemented are based on Zhou et.al. (2011) &lt;doi:10.1002/9780470906514&gt; and Obuchowski (2000) &lt;doi:10.1097/EDE.0b013e3181a663cc&gt;. ">
 <title>Sample Sizes for Multi-Reader Multi-Case (MRMC) Studies • MRMCsamplesize</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
@@ -17,8 +19,10 @@
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Sample Sizes for Multi-Reader Multi-Case (MRMC) Studies">
 <meta property="og:description" content="Sample size estimations for MRMC studies based on the Obuchowski-Rockette (OR) methodology is implemented. The function can calculate sample sizes where the 
              endpoint of interest in the study is either ROC AUC (Area-Under-the-Receiver-Operating-Characteristics-Curve) or sensitivity. The package can also return sample sizes for studies
-             expected to have clustering effect (eg.- multiple pulmonary nodules per patient). All calculations assume that the study design is fully crossed (paired-reader, paired-case) where
-             each reader reads/interprets each case (eg.- Chest X-ray image) and there are two intereventions/imaging-modalities/techniques in the study.">
+             expected to have clustering effect (e.g.- multiple pulmonary nodules per patient). All calculations assume that the study design is fully crossed (paired-reader, paired-case) where
+             each reader reads/interprets each case and that there are two interventions/imaging-modalities/techniques in the study. In addition to MRMC, it can also be used to estimate sample sizes 
+             for standalone studies where sensitivity or AUC are the primary endpoints.
+             The methods implemented are based on Zhou et.al. (2011) &lt;doi:10.1002/9780470906514&gt; and Obuchowski (2000) &lt;doi:10.1097/EDE.0b013e3181a663cc&gt;. ">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -49,19 +53,54 @@
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
 </form>
 
-      <ul class="navbar-nav"></ul>
+      <ul class="navbar-nav">
+<li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/technOslerphile/MRMCsamplesize/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 
     
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9">
-Sample size estimations for MRMC studies based on the Obuchowski-Rockette (OR) methodology is implemented. The function can calculate sample sizes where the 
-             endpoint of interest in the study is either ROC AUC (Area-Under-the-Receiver-Operating-Characteristics-Curve) or sensitivity. The package can also return sample sizes for studies
-             expected to have clustering effect (eg.- multiple pulmonary nodules per patient). All calculations assume that the study design is fully crossed (paired-reader, paired-case) where
-             each reader reads/interprets each case (eg.- Chest X-ray image) and there are two intereventions/imaging-modalities/techniques in the study.
-  </main><aside class="col-md-3"><div class="license">
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header"><h1 id="mrmcsamplesize">MRMCsamplesize<a class="anchor" aria-label="anchor" href="#mrmcsamplesize"></a>
+</h1></div>
+<p><strong>An R Package to Estimate Sample Sizes for Multi-Reader Multi-Case (MRMC) Studies</strong></p>
+<p><a href="https://technoslerphile.github.io/MRMCsamplesize/index.html" class="external-link"><strong>Click here to go to the online R Package Documentation</strong></a></p>
+<p><em>MRMCsamplesize</em> is an R package with a function to estimate number of cases and readers required for a planned MRMC study. It does so based on the Obuchowski-Rockette (OR) model for statistical analysis of MRMC data. The package is meant only for sample size estimation and it cannot be used for statistical analysis of MRMC data.</p>
+<p>CRAN submission in progress. This will be updated when this package becomes available from CRAN.</p>
+<p><strong>How to install the package</strong></p>
+<pre><code><span><span class="co">#using devtools, you can install it from GitHub directly</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://devtools.r-lib.org/" class="external-link">"devtools"</a></span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"technOslerphile/MRMCsamplesize"</span><span class="op">)</span></span></code></pre>
+<p><strong>Usage example</strong></p>
+<pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/technOslerphile/MRMCsamplesize" class="external-link">"MRMCsamplesize"</a></span><span class="op">)</span></span>
+<span><span class="va">result1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/sampleSize_MRMC.html">sampleSize_MRMC</a></span><span class="op">(</span>endpoint <span class="op">=</span> <span class="st">'auc'</span>,J <span class="op">=</span> <span class="fl">10</span>,delta <span class="op">=</span> <span class="fl">0.10</span>,theta <span class="op">=</span> <span class="fl">0.75</span>,</span>
+<span>                           rangeb <span class="op">=</span> <span class="fl">0.1</span>, rangew <span class="op">=</span> <span class="fl">0.05</span>, R <span class="op">=</span> <span class="fl">1</span>, r1 <span class="op">=</span> <span class="fl">0.47</span>,corr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">result2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/sampleSize_MRMC.html">sampleSize_MRMC</a></span><span class="op">(</span>endpoint <span class="op">=</span> <span class="st">'auc'</span>,J <span class="op">=</span> <span class="fl">20</span>,delta <span class="op">=</span> <span class="fl">0.05</span>,theta <span class="op">=</span> <span class="fl">0.75</span>,</span>
+<span>                           rangeb <span class="op">=</span> <span class="fl">0.2</span>, rangew <span class="op">=</span> <span class="fl">0.05</span>, R <span class="op">=</span> <span class="fl">1</span>, r1 <span class="op">=</span> <span class="fl">0.47</span>,corr <span class="op">=</span> <span class="cn">TRUE</span>, ICC <span class="op">=</span> <span class="fl">0.5</span>, s <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span></span>
+<span><span class="va">result3</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/sampleSize_MRMC.html">sampleSize_MRMC</a></span><span class="op">(</span>endpoint <span class="op">=</span> <span class="st">'se'</span>,J <span class="op">=</span> <span class="fl">15</span>, delta <span class="op">=</span> <span class="fl">0.05</span>, theta <span class="op">=</span> <span class="fl">0.75</span>,</span>
+<span>                           rangeb <span class="op">=</span> <span class="fl">0.2</span>, rangew <span class="op">=</span> <span class="fl">0.025</span>, R <span class="op">=</span> <span class="fl">1</span>, r1 <span class="op">=</span> <span class="fl">0.5</span>, corr <span class="op">=</span> <span class="cn">TRUE</span>, ICC <span class="op">=</span> <span class="fl">0.5</span>, s <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span></span></code></pre>
+<hr>
+<p>I gladly welcome all suggestions for improvements and collaborations</p>
+<p><a href="https://github.com/technOslerphile/MRMCsamplesize/issues" class="external-link"><em>Please report any bugs or issues here</em></a></p>
+<p><strong>Please cite this package if you use it for your research</strong></p>
+<p>Robert D (2023). MRMCsamplesize: Sample Sizes for Multi-Reader Multi-Case (MRMC) Studies. R package version 1.0.0, <a href="https://github.com/technOslerphile/MRMCsamplesize" class="external-link uri">https://github.com/technOslerphile/MRMCsamplesize</a>.</p>
+</div>
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/technOslerphile/MRMCsamplesize/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/technOslerphile/MRMCsamplesize/issues" class="external-link">Report a bug</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>
@@ -81,7 +120,7 @@ Sample size estimations for MRMC studies based on the Obuchowski-Rockette (OR) m
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Dennis Robert <br><small class="roles"> Maintainer </small>  </li>
+<li>Dennis Robert <br><small class="roles"> Author, maintainer </small>  </li>
 </ul>
 </div>
 
