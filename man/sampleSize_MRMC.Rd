@@ -29,7 +29,7 @@ sampleSize_MRMC(
 )
 }
 \arguments{
-\item{endpoint}{Character string to inform what is the endpoint of the MRMC study. Values can be either \code{auc} or \code{sensitivity} or \code{specificity}. Should be between 0 and 1.}
+\item{endpoint}{Character string to inform what is the Figure-of-Merit (FOM) which will be used as the endpoint of the MRMC study. Values can be either \code{auc} or \code{sensitivity} or \code{specificity}.}
 
 \item{J}{The number of readers for the study. It is recommended to have minimum 5 readers in any MRMC study.}
 
@@ -39,17 +39,17 @@ sampleSize_MRMC(
 
 \item{rangew}{Intra-reader variability range (sometimes referred to as within-reader variability) denoting the anticipated difference between the accuracies of a reader who interprets the same images using the same imaging technique at two different times. Should be a numeric value between 0 and 1.}
 
-\item{theta}{Expected average value of the endpoint for the J readers.}
+\item{theta}{Expected average value of the endpoint for the $\code{J} readers.}
 
 \item{R}{Ratio of non-diseased cases to diseased cases. Defaults to 1.}
 
-\item{r1}{Correlation between accuracies estimated from the same sample of patients by the same reader using different modalities. Rockette (1998) recommended a value of 0.47 to use when there is lack of pilot data.}
+\item{r1}{Correlation between FOMs of readers when same sample of cases are evaluated by the same reader using different modalities.}
 
-\item{r2}{Correlation between accuracies estimated from the same sample of patients by different readers using the same modality. It is assumed that r2 = r3 for default calculations.}
+\item{r2}{Correlation between FOMs when the same cases are evaluated by different readers using the same modality. It is assumed that \code{r2 = r3} for default calculations.}
 
-\item{r3}{Correlation between accuracies estimated from the same sample of patients by different readers using different modality. It is assumed that r2 = r3 for default calculations.}
+\item{r3}{Correlation between FOMs when the same cases are evaluated by different readers using different modalities. It is assumed that \code{r2 = r3} for default calculations.}
 
-\item{rb}{Correlation between accuracies obtained when a set of readers examines the same sample of patients using different modalities. The default value is 0.8 as recommended by Rockette, Obuchowski and Hillis.}
+\item{rb}{Correlation between FOMs when the same readers evaluate cases using different modalities. The default value is $\code{0.8}.}
 
 \item{K}{Number of times each reader interprets the same images from the same modality. This is always equal to 1 in a fully-crossed paired-reader paired-case study design with two modalities.}
 
@@ -65,7 +65,7 @@ sampleSize_MRMC(
 
 \item{n_reading_sessions_per_reader}{Number of times each reader interprets each case. Defaults to 2 which corresponds to a typical MRMC study with 2 modalities.}
 
-\item{corr}{Logical value indicating if \code{ICC} has to be adjusted (\code{code}) or not (\code{FALSE}). Defaults to \code{FALSE}.}
+\item{corr}{Logical value indicating if intra-cluster correlation\code{(ICC)} has to be adjusted or not.Defaults to \code{FALSE}.}
 
 \item{ICC}{A numerical value between 0 and 1 indicating the expected ICC if \code{corr} is \code{TRUE}.}
 

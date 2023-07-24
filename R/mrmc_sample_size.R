@@ -5,17 +5,17 @@
 #'
 #' @author Dennis Robert \email{dennis.robert.nm@gmail.com}
 #'
-#' @param endpoint Character string to inform what is the endpoint of the MRMC study. Values can be either \code{auc} or \code{sensitivity} or \code{specificity}. Should be between 0 and 1.
+#' @param endpoint Character string to inform what is the Figure-of-Merit (FOM) which will be used as the endpoint of the MRMC study. Values can be either \code{auc} or \code{sensitivity} or \code{specificity}.
 #' @param J The number of readers for the study. It is recommended to have minimum 5 readers in any MRMC study.
 #' @param delta Effect size denoting the anticipated difference in the endpoint between the two interventions/imaging-modalities/techniques. Typically chosen values are 0.04, 0.05 and 0.06. Should be between 0 and 1.
 #' @param rangeb Inter-reader variability (sometimes referred to as between-reader variability) range denoting the anticipated difference between the highest accuracy of any reader in the study and the lowest accuracy of any reader in the study. Should be a numeric value between 0 and 1.
 #' @param rangew Intra-reader variability range (sometimes referred to as within-reader variability) denoting the anticipated difference between the accuracies of a reader who interprets the same images using the same imaging technique at two different times. Should be a numeric value between 0 and 1.
-#' @param theta Expected average value of the endpoint for the J readers.
+#' @param theta Expected average value of the endpoint for the $\code{J} readers.
 #' @param R Ratio of non-diseased cases to diseased cases. Defaults to 1.
-#' @param r1 Correlation between accuracies estimated from the same sample of patients by the same reader using different modalities. Rockette (1998) recommended a value of 0.47 to use when there is lack of pilot data.
-#' @param r2 Correlation between accuracies estimated from the same sample of patients by different readers using the same modality. It is assumed that r2 = r3 for default calculations.
-#' @param r3 Correlation between accuracies estimated from the same sample of patients by different readers using different modality. It is assumed that r2 = r3 for default calculations.
-#' @param rb Correlation between accuracies obtained when a set of readers examines the same sample of patients using different modalities. The default value is 0.8 as recommended by Rockette, Obuchowski and Hillis.
+#' @param r1 Correlation between FOMs of readers when same sample of cases are evaluated by the same reader using different modalities.
+#' @param r2 Correlation between FOMs when the same cases are evaluated by different readers using the same modality. It is assumed that \code{r2 = r3} for default calculations.
+#' @param r3 Correlation between FOMs when the same cases are evaluated by different readers using different modalities. It is assumed that \code{r2 = r3} for default calculations.
+#' @param rb Correlation between FOMs when the same readers evaluate cases using different modalities. The default value is $\code{0.8}.
 #' @param K Number of times each reader interprets the same images from the same modality. This is always equal to 1 in a fully-crossed paired-reader paired-case study design with two modalities.
 #' @param power Power to detect \code{delta} given all other assumptions. Default value is 0.8 corresponding to 80 percent power.
 #' @param alpha The type I error rate. Default value is 0.05 corresponding to 5 percent type I error (significance level).
@@ -23,7 +23,7 @@
 #' @param var_auc Variance estimation method when endpoint is \code{auc}. Defaults to the string \code{obuchowski}. If value is changed to \code{blume}, then method proposed by Blume (2009) will be used to estimate the variance.
 #' @param reader_var_estimation_method  #A value = \code{normal} uses the assumption that accuracies are distributed normally and thus the relationship between range and standard deviation can be used to estimate the inter and intra reader variances from \code{rangeb} and \code{rangew}. Any other value will use a rule of thumb to estimate inter and intra reader variances by dividing \code{rangeb} and \code{rangew} by 4 followed by squaring it. \code{normal} method is typically more conservative especially when J is less than 30-35.
 #' @param n_reading_sessions_per_reader Number of times each reader interprets each case. Defaults to 2 which corresponds to a typical MRMC study with 2 modalities.
-#' @param corr Logical value indicating if \code{ICC} has to be adjusted (\code{code}) or not (\code{FALSE}). Defaults to \code{FALSE}.
+#' @param corr Logical value indicating if intra-cluster correlation\code{(ICC)} has to be adjusted or not.Defaults to \code{FALSE}.
 #' @param ICC A numerical value between 0 and 1 indicating the expected ICC if \code{corr} is \code{TRUE}.
 #' @param s Average number of lesions in diseased cases.
 
@@ -74,6 +74,23 @@ sampleSize_MRMC <- function(endpoint = "auc",
                             corr = FALSE,
                             ICC = NULL,
                             s = NULL){
+
+  if (J < 5) {warning("Number of readers < 5 is not recommended for an MRMC study.")}
+  if (delta > 0.50 & delta < 1) {warning("Effect size seems to be very large. Are you sure to power the study for such a large effect size?")}
+  if (theta >= 1 | theta <=0) {stop("The conjectured 'theta' value does not seem probable. It has to be a numeric value 0 < theta < 1")}
+  if (delta > 1 | delta <= 0) {stop("Improbable delta value. It has to be numeric value 0 < delta < 1")}
+  if (! ((rangeb > 0 & rangeb < 1)  &
+         (rangew > 0 & rangew < 1)  &
+         (r1 > 0 & r1 < 1) &
+         (r2 > 0 & r2 < 1) &
+         (r3 > 0 & r3 < 1) &
+         (rb > 0 & rb < 1) &
+         (R > 0) ))
+    {stop("Invalid correlation values or reader variability ranges or ratio found!")}
+
+
+
+
   if(tolower(reader_var_estimation_method) == 'normal'){
     f <- function(x) J*x*stats::pnorm(x)^(J-1)*stats::dnorm(x)
     c1 <- 1/(2*stats::integrate(f,-Inf,Inf)$value) #constant for estimating sb
@@ -96,9 +113,6 @@ sampleSize_MRMC <- function(endpoint = "auc",
   varW <- sw^2
   num <- ((J*delta^2)/ (2*lambda)) -  (varTR + sw^2/K)
   den <- (1-r1) + (J-1)*(r2-r3)
-
-  #sigma.square.e = num/den
-  #sigma.square.c = sigma.square.e - sw^2
 
   sigma.square.c = num/den
 
@@ -150,8 +164,6 @@ sampleSize_MRMC <- function(endpoint = "auc",
                          r3 = r3,
                          method = METHOD1, note = NOTE1), class = "power.htest")
 
-  print(out1)
-
 
   if (!corr){
     text <- "Not applicable"
@@ -162,6 +174,7 @@ sampleSize_MRMC <- function(endpoint = "auc",
     nReads <- n.total*J*(nu1+1)
     de <- NA
     s <- NA
+    if (nUnits_i < 10) {warning("Number of required diseased cases is coming out to be < 10. It is not typically recommended to conduct MRMC study with less than 10 cases. Consider increasing the sample size to minimum 10 diseased cases.")}
   } else {
     if(is.null(ICC) | is.null(s)) {stop("ICC and s must be valid numeric values to take correlation within diseased cases into account")}
     text <- "Intra-class correlation applicable"
@@ -173,17 +186,18 @@ sampleSize_MRMC <- function(endpoint = "auc",
     nTotal = nCases_c + nControls
     nReads <- nTotal*J*(nu1+1)
     s <- s
-  }
+    if (nUnits_c < 10) {warning("Number of required diseased cases is coming out to be < 10. It is not typically recommended to conduct MRMC study with less than 10 cases. Consider increasing the sample size to minimum 10 diseased cases.")}
 
+  }
 
 
   METHOD2 <- "Obuchowski-Rockette Sample Size Estimation Results"
 
   NOTE2 <- paste0("\n",
-                  "ICC: Is intra-class correlation (ICC) considered while estimating sample size", "\n",
+                  "ICC: Is intra-cluster correlation (ICC) considered while estimating sample size?", "\n",
                   "nUnits_i: Number of required units with presence of at least one lesion assuming independence between units", "\n",
-                  "nCases_c: Number of required cases with presence of at least one lesion after adjusting for ICC", "\n",
-                  "nControls: Number of required controls (images/patients without any lesion)", "\n",
+                  "nCases_c: Number of required cases with presence of at least one lesion (diseased cases) after adjusting for ICC", "\n",
+                  "nControls: Number of required controls (non-diseased cases)", "\n",
                   "nTotal: Total sample size (cases)", "\n",
                   "J: Number of readers", "\n",
                   "nReads: Total number of reads in the MRMC study", "\n",
@@ -206,9 +220,6 @@ sampleSize_MRMC <- function(endpoint = "auc",
                          alpha = alpha,
                          method = METHOD2, note = NOTE2), class = "power.htest")
 
-  print(out2)
-
-
-  return(list("varComponents" = out1, "ORSampleSizeResults" = out2))
-
-  }
+  out <- list("varComponents" = out1, "ORSampleSizeResults" = out2)
+  return(out)
+}

@@ -76,7 +76,7 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>endpoint</dt>
-<dd><p>Character string to inform what is the endpoint of the MRMC study. Values can be either <code>auc</code> or <code>sensitivity</code> or <code>specificity</code>. Should be between 0 and 1.</p></dd>
+<dd><p>Character string to inform what is the Figure-of-Merit (FOM) which will be used as the endpoint of the MRMC study. Values can be either <code>auc</code> or <code>sensitivity</code> or <code>specificity</code>.</p></dd>
 
 
 <dt>J</dt>
@@ -96,7 +96,7 @@
 
 
 <dt>theta</dt>
-<dd><p>Expected average value of the endpoint for the J readers.</p></dd>
+<dd><p>Expected average value of the endpoint for the $<code>J</code> readers.</p></dd>
 
 
 <dt>R</dt>
@@ -104,19 +104,19 @@
 
 
 <dt>r1</dt>
-<dd><p>Correlation between accuracies estimated from the same sample of patients by the same reader using different modalities. Rockette (1998) recommended a value of 0.47 to use when there is lack of pilot data.</p></dd>
+<dd><p>Correlation between FOMs of readers when same sample of cases are evaluated by the same reader using different modalities.</p></dd>
 
 
 <dt>r2</dt>
-<dd><p>Correlation between accuracies estimated from the same sample of patients by different readers using the same modality. It is assumed that r2 = r3 for default calculations.</p></dd>
+<dd><p>Correlation between FOMs when the same cases are evaluated by different readers using the same modality. It is assumed that <code>r2 = r3</code> for default calculations.</p></dd>
 
 
 <dt>r3</dt>
-<dd><p>Correlation between accuracies estimated from the same sample of patients by different readers using different modality. It is assumed that r2 = r3 for default calculations.</p></dd>
+<dd><p>Correlation between FOMs when the same cases are evaluated by different readers using different modalities. It is assumed that <code>r2 = r3</code> for default calculations.</p></dd>
 
 
 <dt>rb</dt>
-<dd><p>Correlation between accuracies obtained when a set of readers examines the same sample of patients using different modalities. The default value is 0.8 as recommended by Rockette, Obuchowski and Hillis.</p></dd>
+<dd><p>Correlation between FOMs when the same readers evaluate cases using different modalities. The default value is $<code>0.8</code>.</p></dd>
 
 
 <dt>K</dt>
@@ -148,7 +148,7 @@
 
 
 <dt>corr</dt>
-<dd><p>Logical value indicating if <code>ICC</code> has to be adjusted (<code>code</code>) or not (<code>FALSE</code>). Defaults to <code>FALSE</code>.</p></dd>
+<dd><p>Logical value indicating if intra-cluster correlation<code>(ICC)</code> has to be adjusted or not.Defaults to <code>FALSE</code>.</p></dd>
 
 
 <dt>ICC</dt>
@@ -185,178 +185,10 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/technOslerphile/MRMCsamplesize" class="external-link">"MRMCsamplesize"</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">result1</span> <span class="op">&lt;-</span> <span class="fu">sampleSize_MRMC</span><span class="op">(</span>endpoint <span class="op">=</span> <span class="st">'auc'</span>,J <span class="op">=</span> <span class="fl">10</span>,delta <span class="op">=</span> <span class="fl">0.10</span>,theta <span class="op">=</span> <span class="fl">0.75</span>,</span></span>
 <span class="r-in"><span>rangeb <span class="op">=</span> <span class="fl">0.1</span>, rangew <span class="op">=</span> <span class="fl">0.05</span>, R <span class="op">=</span> <span class="fl">1</span>, r1 <span class="op">=</span> <span class="fl">0.47</span>,corr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      OR Variance Components </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           varTR = 0.0002111701</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            varE = 0.007370216</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            varR = 0.00105585</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            varW = 0.001963495</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            Cov1 = 0.003464002</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              r1 = 0.47</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            Cov2 = 0.002211065</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              r2 = 0.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            Cov3 = 0.002211065</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              r3 = 0.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NOTE: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> varTR: Var(T*R), the estimated variance of the interaction between reader and test</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> varE: Var(E), the estimated variance of estimated accuracy of a reader due to both intrareader variability and patient sample variability</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> varR: Var(R), the inter-reader variance estimated from rangeb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> varW: Var(W), the intra-reader variance estimated from rangew</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cov1: Covariance between accuracies estimated from the same sample of patients by the same reader using different imaging techniques</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> r1: Correlation corresponding to Cov1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cov2: Covariance between accuracies estimated from the same sample of patients by different readers using the same imaging technique</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> r2: Correlation corresponding to Cov2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cov3: Covariance between accuracies estimated from the same sample of patients by different readers using different imaging techniques</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> r3: Correlation corresponding to Cov1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Obuchowski-Rockette Sample Size Estimation Results </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             ICC = Not applicable</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        nUnits_i = 25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        nCases_c = NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       nControls = 25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          nTotal = 50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               J = 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          nReads = 1000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              DE = NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               s = NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           power = 0.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           alpha = 0.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NOTE: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ICC: Is intra-class correlation (ICC) considered while estimating sample size</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> nUnits_i: Number of required units with presence of at least one lesion assuming independence between units</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> nCases_c: Number of required cases with presence of at least one lesion after adjusting for ICC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> nControls: Number of required controls (images/patients without any lesion)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> nTotal: Total sample size (cases)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> J: Number of readers</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> nReads: Total number of reads in the MRMC study</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> DE: Design effect due to ICC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> s: Assumed average number of lesions in cases with lesions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> power: Assumed power</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> alpha: Significance level (Type I error rate)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">result2</span> <span class="op">&lt;-</span> <span class="fu">sampleSize_MRMC</span><span class="op">(</span>endpoint <span class="op">=</span> <span class="st">'auc'</span>,J <span class="op">=</span> <span class="fl">20</span>,delta <span class="op">=</span> <span class="fl">0.05</span>,theta <span class="op">=</span> <span class="fl">0.75</span>,</span></span>
 <span class="r-in"><span>rangeb <span class="op">=</span> <span class="fl">0.2</span>, rangew <span class="op">=</span> <span class="fl">0.05</span>, R <span class="op">=</span> <span class="fl">1</span>, r1 <span class="op">=</span> <span class="fl">0.47</span>,corr <span class="op">=</span> <span class="cn">TRUE</span>, ICC <span class="op">=</span> <span class="fl">0.5</span>, s <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      OR Variance Components </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           varTR = 0.0005734828</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            varE = 0.002583854</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            varR = 0.002867414</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            varW = 0.001963495</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            Cov1 = 0.001214412</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              r1 = 0.47</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            Cov2 = 0.0007751563</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              r2 = 0.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            Cov3 = 0.0007751563</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              r3 = 0.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NOTE: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> varTR: Var(T*R), the estimated variance of the interaction between reader and test</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> varE: Var(E), the estimated variance of estimated accuracy of a reader due to both intrareader variability and patient sample variability</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> varR: Var(R), the inter-reader variance estimated from rangeb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> varW: Var(W), the intra-reader variance estimated from rangew</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cov1: Covariance between accuracies estimated from the same sample of patients by the same reader using different imaging techniques</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> r1: Correlation corresponding to Cov1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cov2: Covariance between accuracies estimated from the same sample of patients by different readers using the same imaging technique</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> r2: Correlation corresponding to Cov2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cov3: Covariance between accuracies estimated from the same sample of patients by different readers using different imaging techniques</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> r3: Correlation corresponding to Cov1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Obuchowski-Rockette Sample Size Estimation Results </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             ICC = Intra-class correlation applicable</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        nUnits_i = 218</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        nCases_c = 197</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       nControls = 197</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          nTotal = 394</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               J = 20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          nReads = 15760</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              DE = 1.125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               s = 1.25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           power = 0.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           alpha = 0.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NOTE: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ICC: Is intra-class correlation (ICC) considered while estimating sample size</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> nUnits_i: Number of required units with presence of at least one lesion assuming independence between units</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> nCases_c: Number of required cases with presence of at least one lesion after adjusting for ICC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> nControls: Number of required controls (images/patients without any lesion)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> nTotal: Total sample size (cases)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> J: Number of readers</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> nReads: Total number of reads in the MRMC study</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> DE: Design effect due to ICC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> s: Assumed average number of lesions in cases with lesions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> power: Assumed power</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> alpha: Significance level (Type I error rate)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">result3</span> <span class="op">&lt;-</span> <span class="fu">sampleSize_MRMC</span><span class="op">(</span>endpoint <span class="op">=</span> <span class="st">'se'</span>,J <span class="op">=</span> <span class="fl">15</span>, delta <span class="op">=</span> <span class="fl">0.05</span>, theta <span class="op">=</span> <span class="fl">0.75</span>,</span></span>
 <span class="r-in"><span>rangeb <span class="op">=</span> <span class="fl">0.2</span>, rangew <span class="op">=</span> <span class="fl">0.025</span>, R <span class="op">=</span> <span class="fl">1</span>, r1 <span class="op">=</span> <span class="fl">0.5</span>, corr <span class="op">=</span> <span class="cn">TRUE</span>, ICC <span class="op">=</span> <span class="fl">0.5</span>, s <span class="op">=</span> <span class="fl">1.25</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      OR Variance Components </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           varTR = 0.0006637031</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            varE = 0.002311773</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            varR = 0.003318516</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            varW = 0.0004908739</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            Cov1 = 0.001155886</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              r1 = 0.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            Cov2 = 0.0006935318</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              r2 = 0.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            Cov3 = 0.0006935318</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              r3 = 0.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NOTE: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> varTR: Var(T*R), the estimated variance of the interaction between reader and test</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> varE: Var(E), the estimated variance of estimated accuracy of a reader due to both intrareader variability and patient sample variability</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> varR: Var(R), the inter-reader variance estimated from rangeb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> varW: Var(W), the intra-reader variance estimated from rangew</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cov1: Covariance between accuracies estimated from the same sample of patients by the same reader using different imaging techniques</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> r1: Correlation corresponding to Cov1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cov2: Covariance between accuracies estimated from the same sample of patients by different readers using the same imaging technique</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> r2: Correlation corresponding to Cov2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cov3: Covariance between accuracies estimated from the same sample of patients by different readers using different imaging techniques</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> r3: Correlation corresponding to Cov1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      Obuchowski-Rockette Sample Size Estimation Results </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             ICC = Intra-class correlation applicable</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        nUnits_i = 103</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        nCases_c = 93</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       nControls = 93</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          nTotal = 186</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               J = 15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          nReads = 5580</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              DE = 1.125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               s = 1.25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           power = 0.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           alpha = 0.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NOTE: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ICC: Is intra-class correlation (ICC) considered while estimating sample size</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> nUnits_i: Number of required units with presence of at least one lesion assuming independence between units</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> nCases_c: Number of required cases with presence of at least one lesion after adjusting for ICC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> nControls: Number of required controls (images/patients without any lesion)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> nTotal: Total sample size (cases)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> J: Number of readers</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> nReads: Total number of reads in the MRMC study</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> DE: Design effect due to ICC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> s: Assumed average number of lesions in cases with lesions</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> power: Assumed power</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> alpha: Significance level (Type I error rate)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

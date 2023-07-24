@@ -1,11 +1,10 @@
 #' Estimate sample sizes for standalone studies with sensitivity or AUC as endpoint
-#' @import fpow
 #' @description
 #' \code{sampleSize_MRMC} This function returns number of cases required for a standalone study for endpoints of sensitivity and AUC.
 #'
 #' @author Dennis Robert \email{dennis.robert.nm@gmail.com}
 #'
-#' @param endpoint Character string to inform what is the endpoint of the standalone study. Values can be either \code{auc} or \code{sensitivity} or \code{specificity}. Should be between 0 and 1.
+#' @param endpoint Character string to inform what is the endpoint of the standalone study. Values can be either \code{auc} or \code{sensitivity} or \code{specificity}.
 #' @param theta Expected average value of the endpoint. Must be a value between 0 and 1.
 #' @param precision Required precision of the point estimate of \code{theta}. This is equivalent to half-width of the confidence interval. Must be a numeric value between 0 and 1.
 #' @param R Ratio of non-diseased cases to diseased cases. Defaults to 1.
@@ -46,13 +45,20 @@ sampleSize_Standalone <- function(endpoint = "auc",
                                   ICC = NULL,
                                   s = NULL){
 
+
+  if (precision > 0.20 & precision < 1) {warning("Precision seems to be very minimal. Are you sure to power the study for such a low precision of your estimate?")}
+  if (theta >= 1 | theta <=0) {stop("The conjectured 'theta' value does not seem probable. It has to be a numeric value 0 < theta < 1")}
+  if (precision > 1 | precision <= 0) {stop("Improbable precision. It has to be numeric value 0 < precision < 1")}
+
+
+
   if(tolower(endpoint) %in% c("se", "s", "sens", "spec", "sp", "sensitivity", "specificity") | var_auc == "blume"){
     var.theta= theta*(1-theta) #variance calculation for Se
   }else if(tolower(endpoint) %in% c("auc") & var_auc == "obuchowski"){
     A <-  stats::qnorm(theta)*1.414
     var.theta <- ((0.0099 * exp(-A^2/2)) * ( (5*A^2 +8) + (A^2 +8)/R))
   }else{
-    stop("Endpoint has to be either 'Sensitivity' or 'AUC'")
+    stop("Endpoint has to be either 'sensitivity' or 'auc'")
   }
 
   num = (stats::qnorm(1-alpha/2) + stats::qnorm(power)) * sqrt(var.theta)
@@ -108,9 +114,6 @@ sampleSize_Standalone <- function(endpoint = "auc",
                          power = power,
                          alpha = alpha,
                          method = METHOD, note = NOTE), class = "power.htest")
-
-  print(out)
-
 
   return(list("SampleSizeResults" = out))
 

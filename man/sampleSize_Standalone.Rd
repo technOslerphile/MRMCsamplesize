@@ -18,7 +18,7 @@ sampleSize_Standalone(
 )
 }
 \arguments{
-\item{endpoint}{Character string to inform what is the endpoint of the standalone study. Values can be either \code{auc} or \code{sensitivity} or \code{specificity}. Should be between 0 and 1.}
+\item{endpoint}{Character string to inform what is the endpoint of the standalone study. Values can be either \code{auc} or \code{sensitivity} or \code{specificity}.}
 
 \item{theta}{Expected average value of the endpoint. Must be a value between 0 and 1.}
 
