@@ -29,29 +29,29 @@ sampleSize_MRMC(
 )
 }
 \arguments{
-\item{endpoint}{Character string to inform what is the Figure-of-Merit (FOM) which will be used as the endpoint of the MRMC study. Values can be either \code{auc} or \code{sensitivity} or \code{specificity}.}
+\item{endpoint}{Character string to inform what is the Figure-of-Merit (FOM) which will be used as the endpoint of the MRMC study. Values can be either \code{auc} or \code{sensitivity}.}
 
 \item{J}{The number of readers for the study. It is recommended to have minimum 5 readers in any MRMC study.}
 
 \item{delta}{Effect size denoting the anticipated difference in the endpoint between the two interventions/imaging-modalities/techniques. Typically chosen values are 0.04, 0.05 and 0.06. Should be between 0 and 1.}
 
-\item{rangeb}{Inter-reader variability (sometimes referred to as between-reader variability) range denoting the anticipated difference between the highest accuracy of any reader in the study and the lowest accuracy of any reader in the study. Should be a numeric value between 0 and 1.}
+\item{rangeb}{Inter-reader variability range (sometimes referred to as between-reader variability) denoting the anticipated difference between the highest accuracy of any reader in the study and the lowest accuracy of any reader in the study. Should be a numeric value between 0 and 1.}
 
 \item{rangew}{Intra-reader variability range (sometimes referred to as within-reader variability) denoting the anticipated difference between the accuracies of a reader who interprets the same images using the same imaging technique at two different times. Should be a numeric value between 0 and 1.}
 
-\item{theta}{Expected average value of the endpoint for the $\code{J} readers.}
+\item{theta}{Expected average value of the FOM for the \code{J} readers.}
 
 \item{R}{Ratio of non-diseased cases to diseased cases. Defaults to 1.}
 
-\item{r1}{Correlation between FOMs of readers when same sample of cases are evaluated by the same reader using different modalities.}
+\item{r1}{Correlation between FOMs of readers when same cases are evaluated by the same reader using different modalities.}
 
 \item{r2}{Correlation between FOMs when the same cases are evaluated by different readers using the same modality. It is assumed that \code{r2 = r3} for default calculations.}
 
 \item{r3}{Correlation between FOMs when the same cases are evaluated by different readers using different modalities. It is assumed that \code{r2 = r3} for default calculations.}
 
-\item{rb}{Correlation between FOMs when the same readers evaluate cases using different modalities. The default value is $\code{0.8}.}
+\item{rb}{Correlation between FOMs when the same readers evaluate cases using different modalities. The default value is \code{0.8}.}
 
-\item{K}{Number of times each reader interprets the same images from the same modality. This is always equal to 1 in a fully-crossed paired-reader paired-case study design with two modalities.}
+\item{K}{Number of times each reader interprets the same case from the same modality. This is always equal to 1 in a fully-crossed paired-reader paired-case study design with two modalities.}
 
 \item{power}{Power to detect \code{delta} given all other assumptions. Default value is 0.8 corresponding to 80 percent power.}
 
@@ -61,15 +61,15 @@ sampleSize_MRMC(
 
 \item{var_auc}{Variance estimation method when endpoint is \code{auc}. Defaults to the string \code{obuchowski}. If value is changed to \code{blume}, then method proposed by Blume (2009) will be used to estimate the variance.}
 
-\item{reader_var_estimation_method}{#A value = \code{normal} uses the assumption that accuracies are distributed normally and thus the relationship between range and standard deviation can be used to estimate the inter and intra reader variances from \code{rangeb} and \code{rangew}. Any other value will use a rule of thumb to estimate inter and intra reader variances by dividing \code{rangeb} and \code{rangew} by 4 followed by squaring it. \code{normal} method is typically more conservative especially when J is less than 30-35.}
+\item{reader_var_estimation_method}{A value = \code{normal} uses the assumption that the accuracy of readers are distributed normally and thus the relationship between range and standard deviation can be used to estimate the inter and intra reader variances from \code{rangeb} and \code{rangew}. Any other value will use a rule of thumb to estimate inter and intra reader variances by dividing \code{rangeb} and \code{rangew} by 4 followed by squaring it. \code{normal} method is typically more conservative especially when J is less than 30-35.}
 
 \item{n_reading_sessions_per_reader}{Number of times each reader interprets each case. Defaults to 2 which corresponds to a typical MRMC study with 2 modalities.}
 
-\item{corr}{Logical value indicating if intra-cluster correlation\code{(ICC)} has to be adjusted or not.Defaults to \code{FALSE}.}
+\item{corr}{Logical value indicating if \code{ICC (intra-cluster correlation)} has to be adjusted (\code{TRUE}) or not (\code{FALSE}). Defaults to \code{FALSE}.}
 
 \item{ICC}{A numerical value between 0 and 1 indicating the expected ICC if \code{corr} is \code{TRUE}.}
 
-\item{s}{Average number of lesions in diseased cases.}
+\item{s}{Average number of lesions in diseased cases. This must be a numeric value greater than or equal to 1.}
 }
 \value{
 A list within a list object with two named lists
@@ -80,6 +80,13 @@ A list within a list object with two named lists
 }
 \description{
 \code{sampleSize_MRMC} This function returns number of cases required for a MRMC study for a given number of readers.
+}
+\details{
+When \code{corr = FALSE}, the \code{nUnits_i} in \code{ORSampleSizeResults} list is the number of diseased cases. The number of total cases (diseased + non-diseased; \code{nTotal}) required will depend on the
+the ratio \code{R} specified.
+When \code{corr = TRUE}, the anticipated correlation between units within the same diseased cases are adjusted and the \code{nUnits_i} in \code{ORSampleSizeResults}
+list is the number of units in diseased cases assuming independence. The number of diseased cases required in this scenario will be given
+by \code{nCases_c}. Again, \code{nTotal} required will depend on the \code{R} specified.
 }
 \examples{
 library("MRMCsamplesize")

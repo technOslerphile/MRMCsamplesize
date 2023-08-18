@@ -1,6 +1,6 @@
 Package: MRMCsamplesize
 Type: Package
-Title: Sample Sizes for Multi-Reader Multi-Case (MRMC) Studies
+Title: Sample Size Estimations for Planning Multi-Reader Multi-Case (MRMC) Studies Without Pilot Data
 Version: 1.0.0
 Authors@R: c(person(c("Dennis"), "Robert",
                     email = "dennis.robert.nm@gmail.com",

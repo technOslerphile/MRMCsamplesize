@@ -18,11 +18,11 @@ sampleSize_Standalone(
 )
 }
 \arguments{
-\item{endpoint}{Character string to inform what is the endpoint of the standalone study. Values can be either \code{auc} or \code{sensitivity} or \code{specificity}.}
+\item{endpoint}{Character string to inform what is the endpoint (Figure-Of-Merit - FOM) of the standalone study. Values can be either \code{auc} or \code{sensitivity}.}
 
-\item{theta}{Expected average value of the endpoint. Must be a value between 0 and 1.}
+\item{theta}{Expected average value of the FOM Must be a value between 0 and 1.}
 
-\item{precision}{Required precision of the point estimate of \code{theta}. This is equivalent to half-width of the confidence interval. Must be a numeric value between 0 and 1.}
+\item{precision}{Required precision of the point estimate of FOM. This is equivalent to half-width of the confidence interval. Must be a numeric value between 0 and 1.}
 
 \item{R}{Ratio of non-diseased cases to diseased cases. Defaults to 1.}
 
@@ -32,11 +32,11 @@ sampleSize_Standalone(
 
 \item{var_auc}{Variance estimation method when endpoint is \code{auc}. Defaults to the string \code{obuchowski}. If value is changed to \code{blume}, then method proposed by Blume (2009) will be used to estimate the variance.}
 
-\item{corr}{Logical value indicating if \code{ICC} has to be adjusted (\code{code}) or not (\code{FALSE}). Defaults to \code{FALSE}.}
+\item{corr}{Logical value indicating if \code{ICC (intra-cluster correlation)} has to be adjusted (\code{TRUE}) or not (\code{FALSE}). Defaults to \code{FALSE}.}
 
 \item{ICC}{A numerical value between 0 and 1 indicating the expected ICC if \code{corr} is \code{TRUE}.}
 
-\item{s}{Average number of lesions in diseased cases.}
+\item{s}{Average number of lesions in diseased cases. This must be a numeric value greater than or equal to 1.}
 }
 \value{
 A named list
@@ -46,6 +46,13 @@ A named list
 }
 \description{
 \code{sampleSize_MRMC} This function returns number of cases required for a standalone study for endpoints of sensitivity and AUC.
+}
+\details{
+When \code{corr = FALSE}, the \code{nUnits_i} in \code{SampleSizeResults} is the number of diseased cases. The number of total cases (\code{nTotal}) required will depend on the
+the ratio \code{R} specified.
+When \code{corr = TRUE}, the anticipated correlation between units within the same diseased cases are adjusted and the \code{nUnits_i} in \code{SampleSizeResults}
+list is the number of units in diseased cases assuming independence. The number of diseased cases required in this scenario will be given
+by \code{nCases_c}. Again, \code{nTotal} will depend on the \code{R} specified.
 }
 \examples{
 library("MRMCsamplesize")

@@ -4,18 +4,16 @@
 #'
 #' @author Dennis Robert \email{dennis.robert.nm@gmail.com}
 #'
-#' @param endpoint Character string to inform what is the endpoint of the standalone study. Values can be either \code{auc} or \code{sensitivity} or \code{specificity}.
-#' @param theta Expected average value of the endpoint. Must be a value between 0 and 1.
-#' @param precision Required precision of the point estimate of \code{theta}. This is equivalent to half-width of the confidence interval. Must be a numeric value between 0 and 1.
+#' @param endpoint Character string to inform what is the endpoint (Figure-Of-Merit - FOM) of the standalone study. Values can be either \code{auc} or \code{sensitivity}.
+#' @param theta Expected average value of the FOM Must be a value between 0 and 1.
+#' @param precision Required precision of the point estimate of FOM. This is equivalent to half-width of the confidence interval. Must be a numeric value between 0 and 1.
 #' @param R Ratio of non-diseased cases to diseased cases. Defaults to 1.
 #' @param power Power to detect \code{delta} given all other assumptions. Default value is 0.8 corresponding to 80 percent power.
 #' @param alpha The type I error rate. Default value is 0.05 corresponding to 5 percent type I error (significance level).
 #' @param var_auc Variance estimation method when endpoint is \code{auc}. Defaults to the string \code{obuchowski}. If value is changed to \code{blume}, then method proposed by Blume (2009) will be used to estimate the variance.
-#' @param corr Logical value indicating if \code{ICC} has to be adjusted (\code{code}) or not (\code{FALSE}). Defaults to \code{FALSE}.
+#' @param corr Logical value indicating if \code{ICC (intra-cluster correlation)} has to be adjusted (\code{TRUE}) or not (\code{FALSE}). Defaults to \code{FALSE}.
 #' @param ICC A numerical value between 0 and 1 indicating the expected ICC if \code{corr} is \code{TRUE}.
-#' @param s Average number of lesions in diseased cases.
-
-
+#' @param s Average number of lesions in diseased cases. This must be a numeric value greater than or equal to 1.
 #' @return
 #' A named list
 #' \itemize{
@@ -27,6 +25,12 @@
 #' \item Flahault A, Cadilhac M, Thomas G. Sample size calculation should be performed for design accuracy in diagnostic test studies. J Clin Epidemiol. 2005 Aug;58(8):859-62. doi: 10.1016/j.jclinepi.2004.12.009. PMID: 16018921.
 #' \item Zhou, X.-H., Obuchowski, N.A. and McClish, D.K. (2011). Sample Size Calculations. In Statistical Methods in Diagnostic Medicine (eds X.-H. Zhou, N.A. Obuchowski and D.K. McClish). https://doi.org/10.1002/9780470906514.ch6
 #' }
+#' @details
+#' When \code{corr = FALSE}, the \code{nUnits_i} in \code{SampleSizeResults} is the number of diseased cases. The number of total cases (\code{nTotal}) required will depend on the
+#' the ratio \code{R} specified.
+#' When \code{corr = TRUE}, the anticipated correlation between units within the same diseased cases are adjusted and the \code{nUnits_i} in \code{SampleSizeResults}
+#' list is the number of units in diseased cases assuming independence. The number of diseased cases required in this scenario will be given
+#' by \code{nCases_c}. Again, \code{nTotal} will depend on the \code{R} specified.
 #' @examples
 #' library("MRMCsamplesize")
 #' result1 <- sampleSize_Standalone(endpoint = "auc", theta = 0.9, precision = 0.05,
@@ -52,7 +56,7 @@ sampleSize_Standalone <- function(endpoint = "auc",
 
 
 
-  if(tolower(endpoint) %in% c("se", "s", "sens", "spec", "sp", "sensitivity", "specificity") | var_auc == "blume"){
+  if(tolower(endpoint) %in% c("se", "sens", "sensitivity") | var_auc == "blume"){
     var.theta= theta*(1-theta) #variance calculation for Se
   }else if(tolower(endpoint) %in% c("auc") & var_auc == "obuchowski"){
     A <-  stats::qnorm(theta)*1.414
