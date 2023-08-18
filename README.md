@@ -1,18 +1,22 @@
 # MRMCsamplesize
 **An R Package to Estimate Sample Sizes for Multi-Reader Multi-Case (MRMC) Studies**
 
-[**Click here to go to the online R Package Documentation**](https://technoslerphile.github.io/MRMCsamplesize/index.html)
-
 *MRMCsamplesize* is an R package with a function to estimate number of cases and readers required for a planned MRMC study. It does so based on the Obuchowski-Rockette (OR) model for statistical analysis of MRMC data. The package
 is meant only for sample size estimation and it cannot be used for statistical analysis of MRMC data.
 
-CRAN submission in progress. This will be updated when this package becomes available from CRAN.
-
+[*Available now in CRAN*](https://cran.r-project.org/web/packages/MRMCsamplesize/index.html)
 **How to install the package**
 ```
-#using devtools, you can install it from GitHub directly
+#You can install it directly from CRAN as usual
+
+install.packages("MRMCsamplesize")
+
+#You can also install using devtools the version in Github (this version is the same as in CRAN)
 library("devtools") 
 install_github("technOslerphile/MRMCsamplesize")
+
+
+
 ```
 **Usage example**
 ```
