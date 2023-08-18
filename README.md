@@ -33,6 +33,6 @@ I gladly welcome all suggestions for improvements and collaborations
 
 **Please cite this package if you use it for your research**
 
-  Robert D (2023). MRMCsamplesize: Sample Sizes for Multi-Reader Multi-Case (MRMC) Studies. R package version 1.0.0.
+  Dennis Robert (2023). MRMCsamplesize: Sample Sizes for Multi-Reader Multi-Case (MRMC) Studies. R package version 1.0.0.
   <https://cran.r-project.org/web/packages/MRMCsamplesize/index.html>.
 
