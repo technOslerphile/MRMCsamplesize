@@ -12,7 +12,7 @@ Description: Sample size estimations for MRMC studies based on the Obuchowski-Ro
              expected to have clustering effect (e.g.- multiple pulmonary nodules per patient). All calculations assume that the study design is fully crossed (paired-reader, paired-case) where
              each reader reads/interprets each case and that there are two interventions/imaging-modalities/techniques in the study. In addition to MRMC, it can also be used to estimate sample sizes 
              for standalone studies where sensitivity or AUC are the primary endpoints.
-             The methods implemented are based on the methods described in Zhou et.al. (2011) <doi:10.1002/9780470906514> and Obuchowski (2000) <doi:10.1097/EDE.0b013e3181a663cc>. 
+             The methods implemented are based on the methods described in Zhou et.al. (2011) <doi:10.1002/9780470906514> and Obuchowski (2000) <doi:10.2214/ajr.175.3.1750603>. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
