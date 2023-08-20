@@ -5,6 +5,8 @@
 is meant only for sample size estimation and it cannot be used for statistical analysis of MRMC data.
 
 [*Available now in CRAN*](https://cran.r-project.org/web/packages/MRMCsamplesize/index.html)
+
+
 **How to install the package**
 ```
 #You can install it directly from CRAN as usual
