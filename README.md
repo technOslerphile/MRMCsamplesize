@@ -6,6 +6,7 @@ is meant only for sample size estimation and it cannot be used for statistical a
 
 [*Available now in CRAN*](https://cran.r-project.org/web/packages/MRMCsamplesize/index.html)
 
+[*Detailed documentation now available as a preprint in medRxiv*](https://www.medrxiv.org/content/10.1101/2023.09.25.23296069v1)
 
 **How to install the package**
 ```
@@ -34,7 +35,7 @@ I gladly welcome all suggestions for improvements and collaborations
 [*Please report any bugs or issues here*](https://github.com/technOslerphile/MRMCsamplesize/issues)
 
 **Please cite this package if you use it for your research**
+Robert D, Sathyamurthy S, Putha P. MRMCsamplesize: An R Package for Estimating Sample Sizes for Multi-Reader Multi-Case Studies. medRxiv. Published online 2023. doi:10.1101/2023.09.25.23296069
 
-  Dennis Robert (2023). MRMCsamplesize: Sample Sizes for Multi-Reader Multi-Case (MRMC) Studies. R package version 1.0.0.
-  <https://cran.r-project.org/web/packages/MRMCsamplesize/index.html>.
+
 
