@@ -35,6 +35,7 @@ I gladly welcome all suggestions for improvements and collaborations
 [*Please report any bugs or issues here*](https://github.com/technOslerphile/MRMCsamplesize/issues)
 
 **Please cite this package if you use it for your research**
+
 Robert D, Sathyamurthy S, Putha P. MRMCsamplesize: An R Package for Estimating Sample Sizes for Multi-Reader Multi-Case Studies. medRxiv. Published online 2023. doi:10.1101/2023.09.25.23296069
 
 
