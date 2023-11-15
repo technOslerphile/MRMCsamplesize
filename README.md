@@ -8,6 +8,8 @@ is meant only for sample size estimation and it cannot be used for statistical a
 
 [*Detailed documentation now available as a preprint in medRxiv*](https://www.medrxiv.org/content/10.1101/2023.09.25.23296069v1)
 
+NOTE: The methodology does not incorporate the changes proposed by [*Hillis et. al.*](https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.2532) by using a modified denominator degrees of freedom. The current methodology uses the denominator degrees of freedom proposed by Obuchowski and Rockette in their original publication. This is known to be very conservative. Option to incorporate modified degrees of freedom by Hillis is in development.
+
 **How to install the package**
 ```
 #You can install it directly from CRAN as usual
