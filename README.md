@@ -8,7 +8,9 @@ is meant only for sample size estimation and it cannot be used for statistical a
 
 [*Detailed documentation now available as a preprint in medRxiv*](https://www.medrxiv.org/content/10.1101/2023.09.25.23296069v1)
 
-**NOTE:** The methodology does not incorporate the changes proposed by [*Hillis et. al.*](https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.2532) by using a modified denominator degrees of freedom. The current methodology uses the denominator degrees of freedom proposed by Obuchowski and Rockette in their original publication. This is known to be very conservative. Option to incorporate modified degrees of freedom by Hillis is in development.
+**NOTE:** The methodology does not incorporate the changes proposed by [*Hillis et. al.*](https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.2532) by using a modified denominator degrees of freedom. The current methodology uses the denominator degrees of freedom proposed by Obuchowski and Rockette in their original publication. This is known to be very conservative [*Hillis 2007*](https://doi.org/10.1002/sim.2532). This means that the the number of required cases for a given number of readers outputted by the program can be considered as very conservative and it will typically have considerably more than >P% power where P is the required power you would have assigned as a value to the corresponding argument in the R function. 
+
+Option to incorporate modified degrees of freedom by Hillis is in development.
 
 **How to install the package**
 ```
